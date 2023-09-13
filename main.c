@@ -12,11 +12,11 @@ int main(int ac, char **argv)
 {
 	char *prompt = "$ ";
 
+
 	while (1)
 	{
 		write(STDOUT_FILENO, prompt, 2);
-
-		
+		check_err();
 	}
 	(void)ac, (void)argv;
 	return (0);
