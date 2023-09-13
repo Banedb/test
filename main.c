@@ -10,18 +10,14 @@
 
 int main(int ac, char **argv)
 {
-    long /*ssize_t*/ gi;
-    char *prompt = "$ ";
+	char *prompt = "$ ";
 
-    while (1)
-    {
-      write(STDOUT_FILENO, prompt, 2);
-      gi = check_err();
+	while (1)
+	{
+		write(STDOUT_FILENO, prompt, 2);
 
-
-      printf("%ld\n", gi);
-    }
-
-    (void)ac, (void)argv;
-   return (0);
+		
+	}
+	(void)ac, (void)argv;
+	return (0);
 }

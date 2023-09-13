@@ -3,8 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
-int check_err();
+
+
+int check_err(void);
 
 
 
