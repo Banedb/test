@@ -16,7 +16,7 @@ int main(int ac, char **argv)
 	while (1)
 	{
 		write(STDOUT_FILENO, prompt, 2);
-		check_err();
+		get_input();
 	}
 	(void)ac, (void)argv;
 	return (0);
