@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1694573920 source:c:\msys64\home\user\git\repos\simple_shell\main.c
+	"shell.h"
+
+1694571502 c:\msys64\home\user\git\repos\simple_shell\shell.h
+	<stdio.h>
+	<stdlib.h>
+	<unistd.h>
+
