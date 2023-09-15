@@ -1,23 +1,27 @@
 #include "shell.h"
-
 /**
- * main - main function
- * @ac: number of arguments passed to function
- * @argv: array of arguments passed to function
+ * main - Entry point
+ * @argc: Number of arguments
+ * @argv: Arguments passed to function
+ * @envp: Array of environment variables
  *
- * Return: 0 on Success
+ * Return: 0 (Success)
  */
-
-int main(int ac, char **argv)
+int main(int argc, char **argv, char **envp)
 {
-	char *prompt = "$ ";
+	char *prompt = "$ ", *user_input;
 
 
 	while (1)
 	{
 		write(STDOUT_FILENO, prompt, 2);
-		get_input();
+		user_input = get_input();
+		/* split input string and store as array */
+		argv = tokenizer(user_input);
+		cmdexe(argv, envp);
 	}
-	(void)ac, (void)argv;
+
+	free(user_input);
+	(void)argc;
 	return (0);
 }

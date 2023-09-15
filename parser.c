@@ -2,50 +2,42 @@
 
 /**
  * get_input - gets input from stdin using getline
+ * Return: pointer to the input
  */
-void get_input(void)
+char *get_input(void)
 {
-	char *lineptr = NULL;
+	char *user_input = NULL;
 	size_t n = 0; /*initial bufsize resizable by gl to accommodate input*/
 	ssize_t charc/* actual n of chars gl read from the input stream */;
 
-      /*getline puts what was typed into lineptr*/
-	charc = getline(&lineptr, &n, stdin);
+      /*getline puts what was typed into line*/
+	charc = getline(&user_input, &n, stdin);
        /* check if getline failed or reached EOF or on CTRL + D */
       /*getline returns total n of chars read by the function or -1 on error*/
 	if (charc == -1)
 	{
 		write(STDERR_FILENO, "\n", 1);
-		free(lineptr);
+		free(user_input);
 		exit(0);
 	}
-	tokenizer(lineptr, charc);
-
-	free(lineptr);
+	return (user_input);
 }
 
 /**
- * tokenizer - splits input string into an array of tokens
- * @lineptr: input string
- * @charc: number of chars
+ * tokenizer - splits line into an array of tokens
+ * @line: line to be split
  *
  * Return: pointer to the array
  */
-char **tokenizer(char *lineptr, ssize_t charc)
+char **tokenizer(char *line)
 {
-	int tcount, i;
-	const char *delim = " \n";
-	char *lineptr_copy = NULL, *token, **token_array;
+	int tcount;
+	const char *delim = " \t\n";
+	char *line_copy = NULL, *token, **token_array;
 
-	lineptr_copy = malloc(sizeof(char) * charc);
-	if (!lineptr_copy)
-	{
-		free(lineptr_copy);
-		return (NULL);
-	}
-	_strcpy(lineptr_copy, lineptr);
-	/* split lineptr_copy into an array of words */
-	token = strtok(lineptr_copy, delim);
+	line_copy = _strdup(line);
+	/* split line_copy into an array of words */
+	token = strtok(line_copy, delim);
 	/* count tokens */
 	for (tcount = 0; token != NULL; tcount++)
 		token = strtok(NULL, delim);
@@ -59,17 +51,18 @@ char **tokenizer(char *lineptr, ssize_t charc)
 		return (NULL);
 	}
 	/* store each token in the token_array */
-	token = strtok(lineptr, delim);
-	for (i = 0; token != NULL; i++)
+	token = strtok(line, delim);
+	for (tcount = 0; token != NULL; tcount++)
 	{
-		token_array[i] = malloc(sizeof(char) * strlen(token));
-		_strcpy(token_array[i], token);
+		token_array[tcount] = _strdup(token);
 		token = strtok(NULL, delim);
 	}
-	token_array[i] = NULL;
+	token_array[tcount] = NULL;
 
-	free(lineptr_copy);
-	free(token_array);
+	free(line_copy);
 
 	return (token_array);
 }
+/*The code does not handle the case where the input string is empty */
+/*or contains only whitespace. In such cases, the tokenizer function */
+/* should return NULL or an empty token_array.*/
