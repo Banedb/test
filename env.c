@@ -10,8 +10,8 @@
 char **_env(char **envStrings)
 {
 	env_t *envs;
-	int envCount = 0, i = 0;
-	char **envp = environ;
+	int envCount = 0, i = 0, j;
+	char **envp = environ, *env;
 
 	/* get number of environ variables */
 	for (; *envp != NULL; envp++)
@@ -21,8 +21,8 @@ char **_env(char **envStrings)
 	envp = environ;
 	for ( ; i < envCount; i++)
 	{
-		char *env = *envp;
-		int j = 0;
+		env = *envp;
+		j = 0;
 
 		while (env[j] != '=')
 			j++;
@@ -47,6 +47,3 @@ char **_env(char **envStrings)
 
 	return (envStrings);
 }
- /* we wanna have another function that will have access to the*/
- /* use _puts instead of printf*/
- /* implement my own strbdup*/

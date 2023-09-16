@@ -37,14 +37,22 @@ char **tokenizer(char *line)
 
 	line_copy = _strdup(line);
 	/* split line_copy into an array of words */
-	token = strtok(line_copy, delim);
-	/* count tokens */
-	for (tcount = 0; token != NULL; tcount++)
-		token = strtok(NULL, delim);
-	tcount++;
+	if (line_copy != NULL)
+	{
+		token = strtok(line_copy, delim);
+		/* count tokens */
+		for (tcount = 0; token != NULL; tcount++)
+			token = strtok(NULL, delim);
+		free(line_copy);
+	}
+	else
+	{
+		free(line_copy);
+		return (NULL);
+	}
 
 	/* allocate space to hold the array of strings */
-	token_array = malloc(sizeof(char *) * tcount);
+	token_array = malloc(sizeof(char *) * (tcount + 1));
 	if (!token_array)
 	{
 		free(token_array);
@@ -58,8 +66,6 @@ char **tokenizer(char *line)
 		token = strtok(NULL, delim);
 	}
 	token_array[tcount] = NULL;
-
-	free(line_copy);
 
 	return (token_array);
 }

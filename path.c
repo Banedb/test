@@ -2,13 +2,12 @@
 /**
  * _which - finds path of command
  * @cmd: command
- *
  * Return: path of command || NULL (Failure)
  */
 char *_which(char *cmd)
 {
 	int len_cmd, len_dir;
-	char *path, *path_copy = NULL, *cmdpath, *patht;
+	char *path = NULL, *path_copy = NULL, *cmdpath, *patht;
 	struct stat buf;
 
 	path = _getenv("PATH");
@@ -18,12 +17,10 @@ char *_which(char *cmd)
 		len_cmd = _strlen(cmd);
 		patht = strtok(path_copy, ":");
 
-		while (patht != NULL)
+		while (patht != NULL) /* build path for cmd */
 		{
 			len_dir = _strlen(patht);
 			cmdpath = malloc(len_cmd + len_dir + 2);
-
-			/* build path for cmd */
 			_strcpy(cmdpath, patht);
 			_strcat(cmdpath, "/");
 			_strcat(cmdpath, cmd);
@@ -32,6 +29,7 @@ char *_which(char *cmd)
 			if (stat(cmdpath, &buf) == 0)
 			{
 				free(path_copy);
+				free(path);
 				return (cmdpath);
 			}
 			else
@@ -41,6 +39,7 @@ char *_which(char *cmd)
 			}
 		}
 		free(path_copy);
+		free(path);
 
 		if (stat(cmd, &buf) == 0)
 			return (cmd);
@@ -57,7 +56,8 @@ char *_which(char *cmd)
 char *_getenv(const char *name)
 {
 	int i, j;
-	char **envp = environ;
+	char **envp = environ, *value, *value_start;
+	size_t value_length;
 
 	if (!name || !environ)
 		return (NULL);
@@ -70,10 +70,10 @@ char *_getenv(const char *name)
 		if (name[j] == '\0' && envp[i][j] == '=')
 		{
 			/* Found a matching environment variable*/
-			char *value_start = &envp[i][j + 1];
-			size_t value_length = _strlen(value_start);
+			value_start = &envp[i][j + 1];
+			value_length = _strlen(value_start);
 
-			char *value = malloc(value_length + 1);
+			value = malloc(value_length + 1);
 
 			if (value)
 			{
