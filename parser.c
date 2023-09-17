@@ -10,7 +10,7 @@ char *get_input(void)
 	size_t n = 0; /*initial bufsize resizable by gl to accommodate input*/
 	ssize_t charc/* actual n of chars gl read from the input stream */;
 
-      /*getline puts what was typed into line*/
+      /*getline puts what was typed into user_input*/
 	charc = getline(&user_input, &n, stdin);
        /* check if getline failed or reached EOF or on CTRL + D */
       /*getline returns total n of chars read by the function or -1 on error*/
@@ -40,24 +40,18 @@ char **tokenizer(char *line)
 	if (line_copy != NULL)
 	{
 		token = strtok(line_copy, delim);
-		/* count tokens */
+		/* count tokens ie n of strings */
 		for (tcount = 0; token != NULL; tcount++)
 			token = strtok(NULL, delim);
 		free(line_copy);
 	}
 	else
-	{
-		free(line_copy);
 		return (NULL);
-	}
 
 	/* allocate space to hold the array of strings */
 	token_array = malloc(sizeof(char *) * (tcount + 1));
 	if (!token_array)
-	{
-		free(token_array);
 		return (NULL);
-	}
 	/* store each token in the token_array */
 	token = strtok(line, delim);
 	for (tcount = 0; token != NULL; tcount++)
@@ -66,6 +60,7 @@ char **tokenizer(char *line)
 		token = strtok(NULL, delim);
 	}
 	token_array[tcount] = NULL;
+	free(line);
 
 	return (token_array);
 }

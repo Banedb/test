@@ -7,11 +7,15 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 extern char **environ;
 
 /* error.c */
-void check_err(void);
+int err_gen(char **argv, int err_no);
+
+/*errcode.c */
+char *error_127(char **argv);
 
 /* parser.c */
 char *get_input(void);
@@ -31,6 +35,8 @@ int _strlen(char *s);
 /* strings2.c */
 char *_strdup(char *str);
 char *_strndup(const char *str, size_t n);
+char *myitoa(int num);
+
 
 /* run.c */
 int cmdexe(char **argv, char **envp);
@@ -41,6 +47,14 @@ char **_env(char **envStrings);
 
 /* exit.c */
 void exitShell(void);
+
+/* signal.c */
+void sig_h(int signum);
+
+/* global variable */
+int hist; /* history counter */
+char *name;/* name of program */
+
 
 
 /**

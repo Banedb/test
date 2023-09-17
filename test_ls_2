@@ -1,2 +1,3 @@
 /bin/ls
-/bin/ls
+/bin/ls -al
+ls -al

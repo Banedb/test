@@ -8,7 +8,7 @@
 int cmdexe(char **argv, char **envp)
 {
 	char *cmd = NULL;
-	int exex = -1;
+	int exex = -1, status, exit_status;
 	pid_t pid;
 
 	if (argv && argv[0])
@@ -22,34 +22,42 @@ int cmdexe(char **argv, char **envp)
 				exex = execve(cmd, argv, _env(envp));
 				if (exex == -1)
 				{
-					write(STDERR_FILENO, "Do error.c\n", 11);
 					free(cmd);
-					exit(127);
+					perror("execve");
+					exit(EXIT_FAILURE);
 				}
 			}
-			else if (pid == -1)
+			else if (pid == -1)/* fork failed */
 			{
-				perror("Error");
 				free(cmd);
+				perror("fork");
 				exit(EXIT_FAILURE);
 			}
 			else
-				wait(NULL);
-			free(cmd);
+			{/* parent process */
+				if (waitpid(pid, &status, 0) == -1)
+				{
+					free(cmd);
+					perror("waitpid");
+					exit(EXIT_FAILURE);
+				}
+				if (WIFEXITED(status))
+				{
+					exit_status = WEXITSTATUS(status);
+					if (exit_status != 0)
+						err_gen(argv, exit_status);
+				}
+				else if (WIFSIGNALED(status))
+					write(2, "Command terminated by signal\n", 31);
+				free(cmd);
+			}
 		}
 		else if (_strcmp(argv[0], "exit") == 0)
-		{
-			free(cmd);
 			exitShell();
-		}
-		else if (exex == -1)
-		{
-			write(STDERR_FILENO, "Do error.c", 10);
-			free(cmd);
-			return (-1);
-		}
+		else/* cannot locate exe */
+			err_gen(argv, 127);
 	}
 	else
-		return (-1);
+		return (exex);
 	return (exex);
 }
