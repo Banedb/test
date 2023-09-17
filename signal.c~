@@ -1,5 +1,0 @@
-#include "shell.h"
-
-void sig_h(int signum)
-{
-}

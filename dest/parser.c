@@ -60,8 +60,7 @@ char **tokenizer(char *line)
 		token = strtok(NULL, delim);
 	}
 	token_array[tcount] = NULL;
-	if(line)
-		free(line);
+	free(line);
 
 	return (token_array);
 }
