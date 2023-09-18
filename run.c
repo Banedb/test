@@ -7,14 +7,15 @@
  */
 int cmdexe(char **argv, char **envp)
 {
-	char *cmd = NULL;
+	char *cmd = _which(argv[0]);
 	int exex = -1, status, exit_status;
 	pid_t pid;
 
 	if (argv && argv[0])
 	{
-		cmd = _which(argv[0]);
-		if (cmd != NULL) /* fork only when command exists */
+		if (_strcmp(argv[0], "exit") == 0)
+			exitShell();
+		else if (cmd != NULL) /* fork only when command exists */
 		{
 			pid = fork();
 			if (pid == 0)
@@ -52,8 +53,6 @@ int cmdexe(char **argv, char **envp)
 				free(cmd);
 			}
 		}
-		else if (_strcmp(argv[0], "exit") == 0)
-			exitShell();
 		else/* cannot locate exe */
 			err_gen(argv, 127);
 	}

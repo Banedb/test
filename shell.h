@@ -8,7 +8,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <signal.h>
-#include <stdbool.h>
 
 extern char **environ;
 
@@ -19,7 +18,7 @@ int err_gen(char **argv, int err_no);
 char *error_127(char **argv);
 
 /* parser.c */
-char *get_input(void);
+char *run_input(char **envp);
 char **tokenizer(char *line);
 
 /* path.c */

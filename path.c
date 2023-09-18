@@ -28,17 +28,20 @@ char *_which(char *cmd)
 
 			if (stat(cmdpath, &buf) == 0)
 			{
-				free(path_copy);
+				if (path_copy)
+					free(path_copy);
 				free(path);
 				return (cmdpath);
 			}
 			else
 			{
-				free(cmdpath);
+				if (cmdpath)
+					free(cmdpath);
 				patht = strtok(NULL, ":");
 			}
 		}
-		free(path_copy);
+		if (path_copy)
+			free(path_copy);
 		free(path);
 
 		if (stat(cmd, &buf) == 0)
