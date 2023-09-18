@@ -15,7 +15,7 @@ int err_gen(char **argv, int err_no)
 		errmsg = error_127(argv);
 		break;
 	}
-	
+
 	if (errmsg)
 	{
 		write(STDERR_FILENO, errmsg, _strlen(errmsg));

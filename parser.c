@@ -1,12 +1,13 @@
 #include "shell.h"
 
 /**
- * get_input - gets input from stdin using getline
+ * run_input - gets input from stdin using getline
+ *
  * Return: pointer to the input
  */
-char *run_input(char **envp)
+char *run_input()
 {
-	char **args, *user_input = NULL;
+	char **args, *user_input = NULL, **envp = environ;
 	int i;
 	size_t n = 0; /*initial bufsize resizable by gl to accommodate input*/
 	ssize_t charc/* actual n of chars gl read from the input stream */;
@@ -70,7 +71,7 @@ char **tokenizer(char *line)
 		token = strtok(NULL, delim);
 	}
 	token_array[tcount] = NULL;
-	if(line)
+	if (line)
 		free(line);
 
 	return (token_array);

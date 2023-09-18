@@ -3,11 +3,10 @@
  * main - Entry point
  * @argc: Number of arguments
  * @argv: Arguments passed to function
- * @envp: Array of environment variables
  *
  * Return: 0 (Success)
  */
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
 	char *prompt = "$ ", *user_input = NULL;
 
@@ -24,16 +23,14 @@ int main(int argc, char **argv, char **envp)
 			hist++;
 			write(STDOUT_FILENO, prompt, 2);
 			fflush(stdout);
-			user_input = run_input(envp);
+			user_input = run_input();
 		}
 		if (user_input)
 			free(user_input);
 	}
 	else
 	{/* Non-interactive mode: */
-		user_input = run_input(envp);
-		/* if (user_input) */
-                /*         free(user_input); */
+		user_input = run_input();
 		return (0);
 	}
 	(void)argc;

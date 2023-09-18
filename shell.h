@@ -11,6 +11,11 @@
 
 extern char **environ;
 
+/* builtins.c */
+char *_cd(const char *path);
+char **_env(char **envStrings);
+void exitShell(void);
+
 /* error.c */
 int err_gen(char **argv, int err_no);
 
@@ -18,7 +23,7 @@ int err_gen(char **argv, int err_no);
 char *error_127(char **argv);
 
 /* parser.c */
-char *run_input(char **envp);
+char *run_input();
 char **tokenizer(char *line);
 
 /* path.c */
@@ -37,21 +42,13 @@ char *_strdup(char *str);
 char *_strndup(const char *str, size_t n);
 char *myitoa(int num);
 
-
 /* run.c */
 int cmdexe(char **argv, char **envp);
-
-/* env.c */
-char **_env(char **envStrings);
-
-
-/* exit.c */
-void exitShell(void);
 
 /* signal.c */
 void sig_h(int signum);
 
-/* global variable */
+/* global variables */
 int hist; /* history counter */
 char *name;/* name of program */
 
