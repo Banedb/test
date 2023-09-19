@@ -8,41 +8,54 @@
  */
 char *_cd(const char *path)
 {
-	char **envp, *env, currentPath[MAX_PATH_LENGTH], *prevDir;
+	char **envp, *env, currentPath[MAXPATH_LEN];
+	char *prevDir, *pathcopy, *envcopy;
 	int i, j, envCount = 0;
 
 	/* get number of environ variables */
 	for (envp = environ; *envp != NULL; envp++, envCount++)
 		;
 	/* Populate the environment variables array */
-	for (i = 0; i < envCount; i++, envp++)
+	for (i = 0, envp = environ; i < envCount; i++, envp++)
 	{
 		env = *envp;
 		j = 0;
 
 		while (env[j] != '=')
 			j++;
+		envcopy = _strndup(env, j);
 		if (!path)
 		{
-			if (_strcmp(_strndup(env, j), "HOME") == 0)
+			if (_strcmp(envcopy, "HOME") == 0)
+			{
+				if (envcopy)
+					free(envcopy);
 				return (env + j + 1);
+			}
 		}
-		else if (_strcmp(_strndup(env, j), "PWD") == 0)
+		else if (_strcmp(envcopy, "PWD") == 0)
 			prevDir = env + j + 1;
+		if (envcopy)
+			free(envcopy);
 	}
-	if (_strcmp(_strdup(path), "-") == 0)
+	pathcopy = _strdup(path);
+	if (_strcmp(pathcopy, "-") == 0)
 		path = prevDir;
 	if (chdir(path) != 0)
 	{
-		_fprintf(stderr, "cd: Failed to change directory to %s\n", path);
+		cd_error(pathcopy);
+		if (pathcopy)
+			free(pathcopy);
 		return (NULL);
 	}
 	if (getcwd(currentPath, sizeof(currentPath)) == NULL)
 	{
-		_fprintf(stderr, "cd: Failed to get current directory\n");
+		write(2, "cd : error retrieving current directory\n", 42);
+		if (pathcopy)
+			free(pathcopy);
 		return (NULL);
 	}
-	return (_strdup(path));
+	return (pathcopy);
 }
 
 /**

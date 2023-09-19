@@ -5,7 +5,7 @@
  *
  * Return: pointer of an array of chars
  */
-char *_strdup(char *str)
+char *_strdup(const char *str)
 {
 	char *buf;
 	unsigned int i, j;

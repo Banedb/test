@@ -6,7 +6,6 @@
  */
 char *_which(char *cmd)
 {
-	int len_cmd, len_dir;
 	char *path = NULL, *path_copy = NULL, *cmdpath, *patht;
 	struct stat buf;
 
@@ -14,18 +13,11 @@ char *_which(char *cmd)
 	if (path)
 	{
 		path_copy = _strdup(path);
-		len_cmd = _strlen(cmd);
 		patht = strtok(path_copy, ":");
 
 		while (patht != NULL) /* build path for cmd */
 		{
-			len_dir = _strlen(patht);
-			cmdpath = malloc(len_cmd + len_dir + 2);
-			_strcpy(cmdpath, patht);
-			_strcat(cmdpath, "/");
-			_strcat(cmdpath, cmd);
-			_strcat(cmdpath, "\0");
-
+			cmdpath = build_path(cmd, patht);
 			if (stat(cmdpath, &buf) == 0)
 			{
 				if (path_copy)
@@ -50,7 +42,30 @@ char *_which(char *cmd)
 	}
 	return (NULL);
 }
+/**
+ * build_path - builds path of command
+ * @cmd: command
+ * @patht: ..
+ * Return: path of command || NULL (Failure)
+ */
 
+char *build_path(char *cmd, char *patht)
+{
+	int len_cmd, len_dir;
+	char *cmdpath;
+
+	len_cmd = _strlen(cmd);
+	len_dir = _strlen(patht);
+	cmdpath = malloc(len_cmd + len_dir + 2);
+	if (cmdpath)
+	{
+		_strcpy(cmdpath, patht);
+		_strcat(cmdpath, "/");
+		_strcat(cmdpath, cmd);
+		_strcat(cmdpath, "\0");
+	}
+	return (cmdpath);
+}
 /**
  * _getenv - get enviroment viariables
  * @name: input str

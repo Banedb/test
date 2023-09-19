@@ -1,12 +1,12 @@
 #include "shell.h"
 /**
  * error_127 - unable to locate command's executable
- * @argv:
+ * @args: array of input cmd
  *
  * Return: error message
  */
 
-char *error_127(char **argv)
+char *error_127(char **args)
 {
 	char *errmsg, *ic;
 	int len;
@@ -15,7 +15,7 @@ char *error_127(char **argv)
 	if (!ic)
 		return (NULL);
 
-	len = _strlen(name) + _strlen(ic) + _strlen(argv[0]) + 16;
+	len = _strlen(name) + _strlen(ic) + _strlen(args[0]) + 16;
 	errmsg = malloc(sizeof(char) * (len + 1));
 	if (!errmsg)
 	{
@@ -27,7 +27,7 @@ char *error_127(char **argv)
 	_strcat(errmsg, ": ");
 	_strcat(errmsg, ic);
 	_strcat(errmsg, ": ");
-	_strcat(errmsg, argv[0]);
+	_strcat(errmsg, args[0]);
 	_strcat(errmsg, ": not found\n");
 
 	free(ic);
