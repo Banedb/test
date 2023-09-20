@@ -1,12 +1,14 @@
 #include "shell.h"
 
 /**
- * get_input - gets input from stdin using getline
+ * run_input - gets input from stdin using getline
+ *
  * Return: pointer to the input
  */
-char *get_input(void)
+char *run_input()
 {
-	char *user_input = NULL;
+	char **args, *user_input = NULL, **envp = environ;
+	int i;
 	size_t n = 0; /*initial bufsize resizable by gl to accommodate input*/
 	ssize_t charc/* actual n of chars gl read from the input stream */;
 
@@ -17,9 +19,18 @@ char *get_input(void)
 	if (charc == -1)
 	{
 		write(STDERR_FILENO, "\n", 1);
-		free(user_input);
-		exit(0);
+		if (user_input)
+			free(user_input);
+		exit(EXIT_FAILURE);
 	}
+	/* split input string and store as array */
+	args = tokenizer(user_input);
+	cmdexe(args, envp);
+	if (isatty(STDIN_FILENO))
+		for (i = 0; args[i] != NULL; i++)
+			free(args[i]);
+	if (args)
+		free(args);
 	return (user_input);
 }
 
@@ -60,10 +71,8 @@ char **tokenizer(char *line)
 		token = strtok(NULL, delim);
 	}
 	token_array[tcount] = NULL;
-	free(line);
+	if (line)
+		free(line);
 
 	return (token_array);
 }
-/*The code does not handle the case where the input string is empty */
-/*or contains only whitespace. In such cases, the tokenizer function */
-/* should return NULL or an empty token_array.*/

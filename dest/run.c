@@ -1,63 +1,120 @@
 #include "shell.h"
 /**
- * cmdexe - calls in the execve function to enable command execution
- * @argv: Arguments passed to function
- * @envp: an array of pointers to strings
+ * cmdexe - coordinates command execution
+ * @argv: array of arguments passed to function
+ * @envp: pointer to the environment variables
  * Return: 0 (Success)
  */
 int cmdexe(char **argv, char **envp)
 {
-	char *cmd = NULL;
-	int exex = -1, status, exit_status;
-	pid_t pid;
+	int bic;
 
 	if (argv && argv[0])
 	{
-		cmd = _which(argv[0]);
-		if (cmd != NULL) /* fork only when command exists */
+		bic = exe_bi_cmd(argv);
+		if (!bic)
+			return (0);
+		else
+			return (exe_ext_cmd(argv, envp));
+	}
+	return (-1);
+}
+
+/**
+ * exe_ext_cmd - handles external commands execution
+ * @argv: array of arguments passed to function
+ * @envp: pointer to the environment variables
+ * Return: 0 (Success)
+ */
+
+int exe_ext_cmd(char **argv, char **envp)
+{
+	char *cmd = _which(argv[0]);
+	int exex = -1, exit_status;
+	pid_t pid;
+
+	if (cmd != NULL) /* fork only when command exists */
+	{
+		pid = fork();
+		if (pid == 0)
 		{
-			pid = fork();
-			if (pid == 0)
-			{
-				exex = execve(cmd, argv, _env(envp));
-				if (exex == -1)
-				{
-					free(cmd);
-					perror("execve");
-					exit(EXIT_FAILURE);
-				}
-			}
-			else if (pid == -1)/* fork failed */
+			exex = execve(cmd, argv, _env(envp));
+			if (exex == -1)
 			{
 				free(cmd);
-				perror("fork");
+				perror("execve");
 				exit(EXIT_FAILURE);
 			}
-			else
-			{/* parent process */
-				if (waitpid(pid, &status, 0) == -1)
-				{
-					free(cmd);
-					perror("waitpid");
-					exit(EXIT_FAILURE);
-				}
-				if (WIFEXITED(status))
-				{
-					exit_status = WEXITSTATUS(status);
-					if (exit_status != 0)
-						err_gen(argv, exit_status);
-				}
-				else if (WIFSIGNALED(status))
-					write(2, "Command terminated by signal\n", 31);
-				free(cmd);
-			}
 		}
-		else if (_strcmp(argv[0], "exit") == 0)
-			exitShell();
-		else/* cannot locate exe */
-			err_gen(argv, 127);
+		else if (pid == -1)/* fork failed */
+		{
+			free(cmd);
+			perror("fork");
+			exit(EXIT_FAILURE);
+		}
+		else
+		{/* parent process */
+			exit_status = parent_proc(pid, argv);
+			if (cmd)
+				free(cmd);
+		}
 	}
-	else
-		return (exex);
-	return (exex);
+	else/* cannot locate exe */
+		err_gen(argv, 127);
+
+	return (exit_status);
+}
+
+/**
+ * parent_proc - handles parent proccess after fork
+ * @argv: array of arguments passed to function
+ * @pid: proccess id
+ * Return: 0 (Success)
+ */
+
+int parent_proc(pid_t pid, char **argv)
+{
+	int status, exit_status;
+
+	if (waitpid(pid, &status, 0) == -1)
+	{
+		perror("waitpid");
+		return (-1);
+	}
+	if (WIFEXITED(status))
+	{
+		exit_status = WEXITSTATUS(status);
+		if (exit_status != 0)
+			err_gen(argv, exit_status);
+	}
+	else if (WIFSIGNALED(status))
+		perror("error");
+	return (exit_status);
+}
+/**
+ * exe_bi_cmd - executes builtin commands
+ * @argv: array of arguments passed to function
+ *
+ * Return: 0 (Success)
+ */
+
+int exe_bi_cmd(char **argv)
+{
+	char *path;
+
+	if (_strcmp(argv[0], "exit") == 0)
+		exitShell();
+	else if (_strcmp(argv[0], "cd") == 0)
+	{
+		if (!argv[1])
+			path = _cd(argv[1]), chdir(path);
+		else
+		{
+			path = _cd(argv[1]);
+			if (path)
+				free(path);
+		}
+		return (0);
+	}
+	return (-1);
 }

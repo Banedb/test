@@ -92,3 +92,46 @@ char *myitoa(int num)
 	str[digits] = '\0';
 	return (str);
 }
+
+/**
+ * _strtok - custom version of the strtok function
+ * @line: line to be split into strings
+ * @delim: the delimiter
+ *
+ * Return: split string
+*/
+char *_strtok(char *line, const char *delim)
+{
+	int j;
+	static char *str;
+	char *str_copy;
+
+	if (line != NULL)
+		str = line;
+	for (; *str != '\0'; str++)
+	{
+		for (j = 0; delim[j] != '\0'; j++)
+		{
+			if (*str == delim[j])
+				break;
+		}
+		if (delim[j] == '\0')
+			break;
+	}
+	str_copy = str;
+	if (*str_copy == '\0')
+		return (NULL);
+	for (; *str != '\0'; str++)
+	{
+		for (j = 0; delim[j] != '\0'; j++)
+		{
+			if (*str == delim[j])
+			{
+				*str = '\0';
+				str++;
+				return (str_copy);
+			}
+		}
+	}
+	return (str_copy);
+}

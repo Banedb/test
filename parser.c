@@ -50,10 +50,10 @@ char **tokenizer(char *line)
 	/* split line_copy into an array of words */
 	if (line_copy != NULL)
 	{
-		token = strtok(line_copy, delim);
+		token = _strtok(line_copy, delim);
 		/* count tokens ie n of strings */
 		for (tcount = 0; token != NULL; tcount++)
-			token = strtok(NULL, delim);
+			token = _strtok(NULL, delim);
 		free(line_copy);
 	}
 	else
@@ -64,11 +64,11 @@ char **tokenizer(char *line)
 	if (!token_array)
 		return (NULL);
 	/* store each token in the token_array */
-	token = strtok(line, delim);
+	token = _strtok(line, delim);
 	for (tcount = 0; token != NULL; tcount++)
 	{
 		token_array[tcount] = _strdup(token);
-		token = strtok(NULL, delim);
+		token = _strtok(NULL, delim);
 	}
 	token_array[tcount] = NULL;
 	if (line)

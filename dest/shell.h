@@ -11,18 +11,26 @@
 
 extern char **environ;
 
-/* error.c */
+/* builtins.c */
+char *_cd(const char *path);
+char **_env(char **envStrings);
+void exitShell(void);
+
+/* errors.c */
 int err_gen(char **argv, int err_no);
+void cd_error(char *args);
 
 /*errcode.c */
-char *error_127(char **argv);
+char *error_127(char **args);
+
 
 /* parser.c */
-char *get_input(void);
+char *run_input();
 char **tokenizer(char *line);
 
 /* path.c */
 char *_which(char *cmd);
+char *build_path(char *cmd, char *patht);
 char *_getenv(const char *name);
 
 /* strings.c */
@@ -33,29 +41,25 @@ int _strcmp(char *s1, char *s2);
 int _strlen(char *s);
 
 /* strings2.c */
-char *_strdup(char *str);
+char *_strdup(const char *str);
 char *_strndup(const char *str, size_t n);
 char *myitoa(int num);
 
-
 /* run.c */
 int cmdexe(char **argv, char **envp);
-
-/* env.c */
-char **_env(char **envStrings);
-
-
-/* exit.c */
-void exitShell(void);
+int exe_bi_cmd(char **argv);
+int exe_ext_cmd(char **argv, char **envp);
+int parent_proc(pid_t pid, char **argv);
 
 /* signal.c */
 void sig_h(int signum);
 
-/* global variable */
+/* global variables */
 int hist; /* history counter */
 char *name;/* name of program */
 
-
+/* MACROS */
+#define MAXPATH_LEN 1024
 
 /**
  * struct env - Allocate memory for the environment variables

@@ -12,6 +12,7 @@ int main(int argc, char **argv)
 
 	name = argv[0];
 	hist = 0;
+	argcount = argc;
 	if (signal(SIGINT, sig_h) == SIG_ERR)
 		exit(EXIT_FAILURE);
 

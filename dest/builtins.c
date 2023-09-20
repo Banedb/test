@@ -1,5 +1,35 @@
 #include "shell.h"
 /**
+ * get_dir - gets dir
+ * @path: ..
+ * @envp: ..
+ * Return: path to destination dir
+ */
+char *get_dir(const char *path, char **envp)
+{
+	char *env, *envcopy, *prevDir;
+	int j = 0;
+
+	env = *envp;
+	while (env[j] != '=')
+		j++;
+	envcopy = _strndup(env, j);
+	if (!path)
+	{
+		if (_strcmp(envcopy, "HOME") == 0)
+		{
+			free(envcopy);
+			return (env + j + 1);
+		}
+	}
+	else if (_strcmp(envcopy, "PWD") == 0)
+		prevDir = env + j + 1;
+	if (envcopy)
+		free(envcopy);
+	return (prevDir);
+}
+
+/**
  * _cd - custom implementation of cd
  * @path: ..
  *
@@ -7,43 +37,29 @@
  */
 char *_cd(const char *path)
 {
-	char **envp, currentPath[MAXPATH_LEN], *prevd, *pathcopy, *env, *envcpy;
-	int j;
+	char **envp, currentPath[MAXPATH_LEN];
+	char *prevDir, *pathcopy;
+	int i, envCount = 0;
 
-	for (envp = environ; *envp != NULL; envp++)/*populate env var array*/
-	{
-		j = 0;
-		env = *envp;
-		while (env[j] != '=')
-			j++;
-		envcpy = _strndup(env, j);
-		if (!path)
-		{
-			if (_strcmp(envcpy, "HOME") == 0)
-			{
-				free(envcpy);
-				return (env + j + 1);
-			}
-		}
-		else if (_strcmp(envcpy, "PWD") == 0)
-			prevd = env + j + 1;
-		free(envcpy);
-	}
+	for (envp = environ; *envp != NULL; envp++, envCount++)
+		;
+	for (i = 0, envp = environ; i < envCount; i++, envp++)
+		prevDir = get_dir(path, envp);
 	pathcopy = _strdup(path);
 	if (_strcmp(pathcopy, "-") == 0)
-	{
-		path = prevd;
-		write(1, prevd, _strlen(prevd) + 1);
-		write(1, "\n", 2);
-	}
+		path = prevDir;
 	if (chdir(path) != 0)
 	{
 		cd_error(pathcopy);
+		if (pathcopy)
+			free(pathcopy);
 		return (NULL);
 	}
 	if (getcwd(currentPath, sizeof(currentPath)) == NULL)
 	{
-		cd_error2(pathcopy);
+		write(2, "cd : error retrieving current directory\n", 42);
+		if (pathcopy)
+			free(pathcopy);
 		return (NULL);
 	}
 	return (pathcopy);
@@ -102,15 +118,7 @@ char **_env(char **envStrings)
  * exitShell - exit cmd implementation
  */
 
-void exitShell(char **argv)
+void exitShell(void)
 {
-	int exitStatus;
-
-	if (argv[1] == NULL)
-		exit(0);
-	else
-	{
-		exitStatus = _atoi(argv[1]);
-		exit(exitStatus);
-	}
+	exit(EXIT_SUCCESS);
 }

@@ -29,6 +29,7 @@ int err_gen(char **argv, int err_no)
  * cd_error - can't cd to specified location
  * @args: array of input command
  *
+ * Return: error message
  */
 
 void cd_error(char *args)
@@ -58,17 +59,4 @@ void cd_error(char *args)
 	free(ic);
 	write(STDERR_FILENO, errmsg, _strlen(errmsg));
 	free(errmsg);
-	free(args);
-}
-
-/**
- * cd_error2 - can't cd to specified location
- * @args: array of input command
- *
- */
-
-void cd_error2(char *args)
-{
-	write(2, "cd : error retrieving current directory\n", 42);
-	free(args);
 }

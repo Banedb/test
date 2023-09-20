@@ -12,13 +12,15 @@
 extern char **environ;
 
 /* builtins.c */
+char *get_dir(const char *path, char **envp);
 char *_cd(const char *path);
 char **_env(char **envStrings);
-void exitShell(void);
+void exitShell(char **argv);
 
 /* errors.c */
 int err_gen(char **argv, int err_no);
 void cd_error(char *args);
+void cd_error2(char *args);
 
 /*errcode.c */
 char *error_127(char **args);
@@ -33,17 +35,19 @@ char *_which(char *cmd);
 char *build_path(char *cmd, char *patht);
 char *_getenv(const char *name);
 
-/* strings.c */
+/* string.c */
 void _puts(char *str);
 char *_strcat(char *dest, char *src);
 char *_strcpy(char *dest, char *src);
 int _strcmp(char *s1, char *s2);
 int _strlen(char *s);
 
-/* strings2.c */
+/* strings.c */
 char *_strdup(const char *str);
 char *_strndup(const char *str, size_t n);
 char *myitoa(int num);
+char *_strtok(char *line, const char *delim);
+
 
 /* run.c */
 int cmdexe(char **argv, char **envp);
@@ -51,12 +55,14 @@ int exe_bi_cmd(char **argv);
 int exe_ext_cmd(char **argv, char **envp);
 int parent_proc(pid_t pid, char **argv);
 
-/* signal.c */
+/*misc.c*/
 void sig_h(int signum);
+int _atoi(char *s);
 
 /* global variables */
 int hist; /* history counter */
-char *name;/* name of program */
+char *name; /* name of program */
+int argcount; /* main function's argc */
 
 /* MACROS */
 #define MAXPATH_LEN 1024

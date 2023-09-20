@@ -103,7 +103,7 @@ int exe_bi_cmd(char **argv)
 	char *path;
 
 	if (_strcmp(argv[0], "exit") == 0)
-		exitShell();
+		exitShell(argv);
 	else if (_strcmp(argv[0], "cd") == 0)
 	{
 		if (!argv[1])
