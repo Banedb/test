@@ -52,9 +52,8 @@ char *_cd(const char *path)
 /**
  * _env - enviroment implementation
  * @envStrings: array of pointer to strings storing
- * environment variable and its values
- * Return: array of pointers to string, containing
- * environ variables and theri values.
+ *
+ * Return: array of pointers to strings
  */
 
 char **_env(char **envStrings)
@@ -100,6 +99,7 @@ char **_env(char **envStrings)
 
 /**
  * exitShell - exit cmd implementation
+ * @argv: array of pointers
  */
 
 void exitShell(char **argv)
