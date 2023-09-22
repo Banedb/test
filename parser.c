@@ -7,7 +7,7 @@
  */
 int run_input(void)
 {
-	int exit_status = 0;
+	int exit_status = 0, count = 0;
 	size_t n = 0; /*initial bufsize resizable by gl to accommodate input*/
 	ssize_t charc/* actual n of chars gl read from the input stream */;
 
@@ -18,15 +18,14 @@ int run_input(void)
 	{
 		if (user_input[charc - 1] == '\n')
 			user_input[charc - 1] = '\0';
+		count++;
 		hist++;
 		exit_status = tokenizer(user_input);
-		fflush(stdin);
 	}
 	if (user_input)
 		free(user_input);
 	/* check if getline failed or reached EOF or on CTRL + D */
-      /*getline returns total n of chars read by the function or -1 on error*/
-	if (charc == -1)
+	if (count == 0)
 	{
 		write(STDERR_FILENO, "\n", 1);
 		exit(exit_status);
@@ -47,8 +46,6 @@ int tokenizer(char *line)
 	char *line_copy = NULL, *token, **token_array, **envp = environ;
 
 	line_copy = _strdup(line);
-	/* printf("linecopy is %s\n", line_copy); */
-	/* split line_copy into an array of words */
 	if (line_copy != NULL)
 	{
 		token = _strtok(line_copy, delim);

@@ -17,7 +17,8 @@ int cmdexe(char **argv, char **envp)
 		else
 			return (exe_ext_cmd(argv, envp));
 	}
-	return (-1);
+	else
+		return (0);
 }
 
 /**
@@ -30,7 +31,7 @@ int cmdexe(char **argv, char **envp)
 int exe_ext_cmd(char **argv, char **envp)
 {
 	char *cmd = _which(argv[0]);
-	int exex = -1, exit_status;
+	int exex = -1, exit_status = 0;
 	pid_t pid;
 
 	if (cmd != NULL) /* fork only when command exists */
@@ -54,9 +55,9 @@ int exe_ext_cmd(char **argv, char **envp)
 		}
 		else
 		{/* parent process */
-			exit_status = parent_proc(pid, argv);
 			if (cmd)
 				free(cmd);
+			return (parent_proc(pid, argv));
 		}
 	}
 	else/* cannot locate exe */
@@ -86,8 +87,11 @@ int parent_proc(pid_t pid, char **argv)
 		if (exit_status != 0)
 			err_gen(argv, exit_status);
 	}
-	else if (WIFSIGNALED(status))
+	else
+	{
+		exit_status = 2;
 		perror("error");
+	}
 	return (exit_status);
 }
 /**
