@@ -5,33 +5,33 @@
  *
  * Return: pointer to the input
  */
-char *run_input()
+int run_input(void)
 {
-	char **args, *user_input = NULL, **envp = environ;
-	int i;
+	int exit_status = 0;
 	size_t n = 0; /*initial bufsize resizable by gl to accommodate input*/
 	ssize_t charc/* actual n of chars gl read from the input stream */;
 
-      /*getline puts what was typed into user_input*/
-	charc = getline(&user_input, &n, stdin);
-       /* check if getline failed or reached EOF or on CTRL + D */
+	hist = 0;
+	user_input = NULL;
+	/*getline puts what was typed into user_input*/
+	while ((charc = getline(&user_input, &n, stdin)) != -1)
+	{
+		if (user_input[charc - 1] == '\n')
+			user_input[charc - 1] = '\0';
+		hist++;
+		exit_status = tokenizer(user_input);
+		fflush(stdin);
+	}
+	if (user_input)
+		free(user_input);
+	/* check if getline failed or reached EOF or on CTRL + D */
       /*getline returns total n of chars read by the function or -1 on error*/
 	if (charc == -1)
 	{
 		write(STDERR_FILENO, "\n", 1);
-		if (user_input)
-			free(user_input);
-		exit(EXIT_FAILURE);
+		exit(exit_status);
 	}
-	/* split input string and store as array */
-	args = tokenizer(user_input);
-	cmdexe(args, envp);
-	if (isatty(STDIN_FILENO))
-		for (i = 0; args[i] != NULL; i++)
-			free(args[i]);
-	if (args)
-		free(args);
-	return (user_input);
+	return (exit_status);
 }
 
 /**
@@ -40,13 +40,14 @@ char *run_input()
  *
  * Return: pointer to the array
  */
-char **tokenizer(char *line)
+int tokenizer(char *line)
 {
-	int tcount;
-	const char *delim = " \t\n";
-	char *line_copy = NULL, *token, **token_array;
+	int tcount, exit_status = 0;
+	const char *delim = " >\n\t";
+	char *line_copy = NULL, *token, **token_array, **envp = environ;
 
 	line_copy = _strdup(line);
+	/* printf("linecopy is %s\n", line_copy); */
 	/* split line_copy into an array of words */
 	if (line_copy != NULL)
 	{
@@ -57,12 +58,12 @@ char **tokenizer(char *line)
 		free(line_copy);
 	}
 	else
-		return (NULL);
+		return (-1);
 
 	/* allocate space to hold the array of strings */
 	token_array = malloc(sizeof(char *) * (tcount + 1));
 	if (!token_array)
-		return (NULL);
+		return (-1);
 	/* store each token in the token_array */
 	token = _strtok(line, delim);
 	for (tcount = 0; token != NULL; tcount++)
@@ -71,8 +72,9 @@ char **tokenizer(char *line)
 		token = _strtok(NULL, delim);
 	}
 	token_array[tcount] = NULL;
-	if (line)
-		free(line);
-
-	return (token_array);
+	exit_status = cmdexe(token_array, envp);
+	if (isatty(STDIN_FILENO))
+		write(STDOUT_FILENO, prompt, 2);
+	free_args(token_array);
+	return (exit_status);
 }

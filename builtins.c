@@ -104,13 +104,21 @@ char **_env(char **envStrings)
 
 void exitShell(char **argv)
 {
-	int exitStatus;
+	int exit_status;
 
 	if (argv[1] == NULL)
+	{
+		free_args(argv);
+		if (user_input)
+			free(user_input);
 		exit(0);
+	}
 	else
 	{
-		exitStatus = _atoi(argv[1]);
-		exit(exitStatus);
+		exit_status = _atoi(argv[1]);
+		free_args(argv);
+		if (user_input)
+			free(user_input);
+		exit(exit_status);
 	}
 }

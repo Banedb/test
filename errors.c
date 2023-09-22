@@ -8,11 +8,13 @@
  */
 int err_gen(char **argv, int err_no)
 {
+	int exit_status = 0;
 	char *errmsg = NULL;
 
 	switch (err_no)
 	{	case 127:
 		errmsg = error_127(argv);
+		exit_status = 127;
 		break;
 	}
 
@@ -21,7 +23,7 @@ int err_gen(char **argv, int err_no)
 		write(STDERR_FILENO, errmsg, _strlen(errmsg));
 		free(errmsg);
 	}
-	return (err_no);
+	return (exit_status);
 
 }
 

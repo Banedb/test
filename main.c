@@ -8,11 +8,10 @@
  */
 int main(int argc, char **argv)
 {
-	char *prompt = "$ ", *user_input = NULL;
+	int exit_status;
 
+	prompt = "$ ";
 	name = argv[0];
-	hist = 0;
-	argcount = argc;
 	if (signal(SIGINT, sig_h) == SIG_ERR)
 		exit(EXIT_FAILURE);
 
@@ -21,19 +20,16 @@ int main(int argc, char **argv)
 	{
 		while (1)
 		{
-			hist++;
 			write(STDOUT_FILENO, prompt, 2);
 			fflush(stdout);
-			user_input = run_input();
+			exit_status = run_input();
 		}
-		if (user_input)
-			free(user_input);
 	}
 	else
 	{/* Non-interactive mode: */
-		user_input = run_input();
-		return (0);
+		exit_status = run_input();
+		return (exit_status);
 	}
 	(void)argc;
-	return (0);
+	return (exit_status);
 }

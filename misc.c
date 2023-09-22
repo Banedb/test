@@ -34,3 +34,18 @@ int _atoi(char *s)
 	res *= sign;
 	return (res);
 }
+
+/**
+ * free_args - free memory before abrupt exit
+ * @args: strings array
+ */
+void free_args(char **args)
+{
+	int i;
+
+	if (isatty(STDIN_FILENO))
+		for (i = 0; args[i] != NULL; i++)
+			free(args[i]);
+	if (args)
+		free(args);
+}

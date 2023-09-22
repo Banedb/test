@@ -43,14 +43,14 @@ int exe_ext_cmd(char **argv, char **envp)
 			{
 				free(cmd);
 				perror("execve");
-				exit(EXIT_FAILURE);
+				return (-1);
 			}
 		}
 		else if (pid == -1)/* fork failed */
 		{
 			free(cmd);
 			perror("fork");
-			exit(EXIT_FAILURE);
+			return (-1);
 		}
 		else
 		{/* parent process */
@@ -60,8 +60,7 @@ int exe_ext_cmd(char **argv, char **envp)
 		}
 	}
 	else/* cannot locate exe */
-		err_gen(argv, 127);
-
+		exit_status = err_gen(argv, 127);
 	return (exit_status);
 }
 

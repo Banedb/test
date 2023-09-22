@@ -27,8 +27,8 @@ char *error_127(char **args);
 
 
 /* parser.c */
-char *run_input();
-char **tokenizer(char *line);
+int run_input(void);
+int tokenizer(char *user_input);
 
 /* path.c */
 char *_which(char *cmd);
@@ -58,11 +58,14 @@ int parent_proc(pid_t pid, char **argv);
 /*misc.c*/
 void sig_h(int signum);
 int _atoi(char *s);
+void free_args(char **args);
 
 /* global variables */
 int hist; /* history counter */
 char *name; /* name of program */
-int argcount; /* main function's argc */
+char *user_input;
+char *prompt;
+
 
 /* MACROS */
 #define MAXPATH_LEN 1024
