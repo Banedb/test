@@ -71,7 +71,7 @@ int hist; /* history counter */
 char *name; /* name of program */
 char *user_input;
 char *prompt;
-
+int mark;
 
 /* MACROS */
 #define MAXPATH_LEN 1024

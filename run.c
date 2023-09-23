@@ -42,21 +42,20 @@ int exe_ext_cmd(char **argv, char **envp)
 			exex = execve(cmd, argv, _env(envp));
 			if (exex == -1)
 			{
-				free(cmd);
+				free_args(argv);
 				perror("execve");
 				return (-1);
 			}
 		}
 		else if (pid == -1)/* fork failed */
 		{
-			free(cmd);
+			free_args(argv);
 			perror("fork");
 			return (-1);
 		}
 		else
 		{/* parent process */
-			if (cmd)
-				free(cmd);
+			free_args(argv);
 			return (parent_proc(pid, argv));
 		}
 	}
@@ -91,6 +90,7 @@ int parent_proc(pid_t pid, char **argv)
 	{
 		exit_status = 2;
 		perror("error");
+		errno = 2;
 	}
 	return (exit_status);
 }

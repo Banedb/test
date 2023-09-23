@@ -43,11 +43,14 @@ void free_args(char **args)
 {
 	int i;
 
-	if (isatty(STDIN_FILENO))
+	if (mark == 0)
+	{
 		for (i = 0; args[i] != NULL; i++)
 			free(args[i]);
-	if (args)
-		free(args);
+		if (args)
+			free(args);
+		mark = 1;
+	}
 }
 
 

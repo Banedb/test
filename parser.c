@@ -19,6 +19,7 @@ int run_input(void)
 		if (user_input[charc - 1] == '\n')
 			user_input[charc - 1] = '\0';
 		count++;
+		mark = 0;
 		hist++;
 		exit_status = tokenizer(user_input);
 	}
