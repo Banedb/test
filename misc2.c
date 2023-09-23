@@ -87,7 +87,8 @@ void gethelp(char **lp, char *buf, size_t *n, ssize_t input, ssize_t capacity)
  * @buf: stream to be read from
  * @input: ..
  * @capacity: ..
- * @Return: ..
+ *
+ * Return: ..
  */
 char *readb(int readbytes, char *buf, ssize_t input, ssize_t capacity)
 {

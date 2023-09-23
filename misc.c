@@ -56,6 +56,7 @@ void free_args(char **args)
  * @ptr: input as a string
  * @old_size: stream to be read from
  * @new_size: ..
+ * Return: pointer to new address
  */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
