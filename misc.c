@@ -43,7 +43,7 @@ void free_args(char **args)
 {
 	int i;
 
-	if (mark == 0)
+	if (isatty(STDIN_FILENO))
 	{
 		for (i = 0; args[i] != NULL; i++)
 			free(args[i]);

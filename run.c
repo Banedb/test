@@ -42,20 +42,20 @@ int exe_ext_cmd(char **argv, char **envp)
 			exex = execve(cmd, argv, _env(envp));
 			if (exex == -1)
 			{
-				free_args(argv);
+				free(cmd);
 				perror("execve");
 				return (-1);
 			}
 		}
 		else if (pid == -1)/* fork failed */
 		{
-			free_args(argv);
+			free(cmd);
 			perror("fork");
 			return (-1);
 		}
 		else
 		{/* parent process */
-			free_args(argv);
+			free(cmd);
 			return (parent_proc(pid, argv));
 		}
 	}
