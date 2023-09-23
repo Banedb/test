@@ -33,7 +33,7 @@ char *_strdup(const char *str)
  * @str: input str
  * @n: number chars to be dup
  * Return: duplicated str
-*/
+ */
 
 char *_strndup(const char *str, size_t n)
 {

@@ -49,3 +49,38 @@ void free_args(char **args)
 	if (args)
 		free(args);
 }
+
+
+/**
+ * _realloc - h
+ * @ptr: input as a string
+ * @old_size: stream to be read from
+ * @new_size: ..
+ */
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
+{
+	unsigned int i;
+	void *buffer;
+	char *dupp, *tide;
+
+	if (new_size == old_size)
+		return (ptr);
+	if (!ptr)
+	{
+		buffer = malloc(new_size);
+		if (buffer == NULL)
+			return (NULL);
+		return (buffer);
+	}
+	if (!new_size && ptr)
+		return (free(ptr), NULL);
+	dupp = ptr;
+	buffer = malloc(sizeof(*dupp) * new_size);
+	if (buffer == NULL)
+		return (free(ptr), NULL);
+	tide = buffer;
+	for (i = 0; i < old_size && i < new_size; i++)
+		tide[i] = *dupp++;
+	free(ptr);
+	return (buffer);
+}

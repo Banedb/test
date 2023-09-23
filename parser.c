@@ -14,7 +14,7 @@ int run_input(void)
 	hist = 0;
 	user_input = NULL;
 	/*getline puts what was typed into user_input*/
-	while ((charc = getline(&user_input, &n, stdin)) != -1)
+	while ((charc = _getline(&user_input, &n, stdin)) != -1)
 	{
 		if (user_input[charc - 1] == '\n')
 			user_input[charc - 1] = '\0';
